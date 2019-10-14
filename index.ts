@@ -1,9 +1,10 @@
-import { success, error } from "signale";
+import { success } from "signale";
 import fs, { WriteStream } from "fs";
 import Crawler from "crawler";
 import cTable from "console.table";
 import cheerio from "cheerio";
 import { StatisticsManager } from "./statistics";
+
 export type CategoryListType = {
   label: string;
   tag: string;
@@ -53,7 +54,6 @@ class MydinScrapper {
       retries: 10
     });
   }
-  // https://www.npmjs.com/package/statware
   private initStats() {
     this.stats = new StatisticsManager();
   }
@@ -145,7 +145,7 @@ class MydinScrapper {
 
   rePrintLog() {
     console.clear();
-    let table = this.stats.print();
+    let table: any = this.stats.print();
     table = Object.values(table);
     console.table(cTable.getTable(table));
     let errors = this.stats.printErrors();
@@ -252,11 +252,6 @@ class MydinScrapper {
       this.nextPage(this.categories[this.currentRunningCategory], 1);
       this.currentRunningCategory++;
     });
-
-    let self = this;
-    // this.crawler.on("request", options => {
-    //   console.log("currentRunningCategory", this.currentRunningCategory);
-    // });
 
     this.crawler.on("drain", () => {
       if (this.currentRunningCategory < this.categories.length - 1) {
